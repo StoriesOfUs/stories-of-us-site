@@ -1,0 +1,24 @@
+[
+  {
+    "id": "we1",
+    "title": "Museum expands audio-described tours with community narrators",
+    "preview": "Local describers co-create scripts with blind visitors.",
+    "date": "2025-06-05T09:00:00Z",
+    "link": "#",
+    "source": "SoundCloud",
+    "region": "Western Europe",
+    "platform": "audio",
+    "lang": "en"
+  },
+  {
+    "id": "we2",
+    "title": "Grand hôpital annonce un essai clinique",
+    "preview": "Projet médical — devrait être exclu.",
+    "date": "2025-07-01T10:00:00Z",
+    "link": "#",
+    "source": "Le Monde",
+    "region": "Western Europe",
+    "platform": "article",
+    "lang": "fr"
+  }
+]

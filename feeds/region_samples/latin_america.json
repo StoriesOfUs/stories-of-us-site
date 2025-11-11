@@ -1,0 +1,24 @@
+[
+  {
+    "id": "la1",
+    "title": "Campaña ciudadana logra semáforos sonoros en el centro",
+    "preview": "Activismo por accesibilidad urbana con mapas táctiles.",
+    "date": "2025-06-02T11:00:00Z",
+    "link": "#",
+    "source": "Twitter",
+    "region": "Latin America",
+    "platform": "image",
+    "lang": "es"
+  },
+  {
+    "id": "la2",
+    "title": "Ensayo clínico sobre nuevo tratamiento en hospital",
+    "preview": "Tema médico — debería excluirse por palabras clave.",
+    "date": "2025-05-05T09:00:00Z",
+    "link": "#",
+    "source": "Diario",
+    "region": "Latin America",
+    "platform": "article",
+    "lang": "es"
+  }
+]
