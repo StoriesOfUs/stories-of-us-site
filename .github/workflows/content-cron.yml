@@ -1,0 +1,39 @@
+
+name: Content Cron (Latest + Digests)
+
+on:
+  schedule:
+    - cron: "0 * * * *"        # hourly (UTC)
+    - cron: "5 0 * * *"        # daily at 00:05 UTC
+  workflow_dispatch: {}         # allow manual run
+
+jobs:
+  update-content:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          extensions: curl, xml
+
+      - name: Generate latest JSON for all plans
+        run: php website_2025/tools/generate_latest_cli.php
+
+      - name: Build daily/weekly/monthly digests
+        run: php website_2025/tools/build_digests_cli.php
+
+      - name: Commit changes (if any)
+        run: |
+          git config user.name "StoriesOfUs Bot"
+          git config user.email "bot@storiesofus.local"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else:
+            git commit -m "chore(content): refresh latest & digests [skip ci]"
+            git push
+          fi
