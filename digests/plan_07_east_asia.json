@@ -1,0 +1,108 @@
+{
+    "created": "2025-11-11T10:15:10+00:00",
+    "weeklyCounts": {},
+    "categorySources": [
+        {
+            "name": "Amnesty International – Latest",
+            "type": "rss",
+            "url": "https://www.amnesty.org/en/latest/feed/",
+            "prefer_lang": "en"
+        },
+        {
+            "name": "Grassroots International — Google News",
+            "type": "rss",
+            "url": "https://news.google.com/rss/search?q=site:grassrootsonline.org+disability&hl=en&gl=US&ceid=US:en",
+            "prefer_lang": "en"
+        },
+        {
+            "name": "Fund for Global Human Rights – Latest",
+            "type": "rss",
+            "url": "https://fundhumanrights.org/feed/",
+            "prefer_lang": "en"
+        },
+        {
+            "name": "Global Justice Now – News",
+            "type": "rss",
+            "url": "https://www.globaljustice.org.uk/feed/",
+            "prefer_lang": "en"
+        },
+        {
+            "name": "Equal Times",
+            "type": "rss",
+            "url": "https://www.equaltimes.org/spip.php?page=backend",
+            "prefer_lang": "en"
+        },
+        {
+            "name": "DRA – Disability Rights Advocates",
+            "type": "rss",
+            "url": "https://dralegal.org/feed/",
+            "prefer_lang": "en"
+        },
+        {
+            "name": "PWDA – People With Disability Australia",
+            "type": "rss",
+            "url": "https://pwd.org.au/feed/",
+            "prefer_lang": "en"
+        },
+        {
+            "name": "WID – Blog",
+            "type": "rss",
+            "url": "https://wid.org/feed/",
+            "prefer_lang": "en"
+        },
+        {
+            "name": "AAPD – Media",
+            "type": "rss",
+            "url": "https://www.aapd.com/feed/",
+            "prefer_lang": "en"
+        },
+        {
+            "name": "Inclusion International – News",
+            "type": "html",
+            "url": "https://inclusion-international.org/news/",
+            "selector": {
+                "item": "article, .news-card, .post",
+                "title": "h2 a, h3 a",
+                "link": "h2 a, h3 a",
+                "date": "time[datetime], .date, .posted-on time"
+            }
+        },
+        {
+            "name": "ENIL – News",
+            "type": "rss",
+            "url": "https://enil.eu/feed/",
+            "prefer_lang": "en"
+        },
+        {
+            "name": "World Blind Union – News & Events",
+            "type": "html",
+            "url": "https://wbu.ngo/news-events/",
+            "selector": {
+                "item": "article, .post, .entry",
+                "title": "h2 a, .entry-title a",
+                "link": "h2 a, .entry-title a",
+                "date": "time[datetime], .posted-on time, .entry-date"
+            }
+        },
+        {
+            "name": "IDDC – Blog",
+            "type": "rss",
+            "url": "https://www.iddcconsortium.net/feed/",
+            "prefer_lang": "en"
+        }
+    ],
+    "regionSources": [
+        {
+            "name": "NHK World — News",
+            "type": "rss",
+            "url": "https://www3.nhk.or.jp/rss/news/cat0.xml",
+            "prefer_lang": "en"
+        },
+        {
+            "name": "SCMP — Asia",
+            "type": "rss",
+            "url": "https://www.scmp.com/rss/91/feed",
+            "prefer_lang": "en"
+        }
+    ]
+}

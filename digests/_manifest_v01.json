@@ -1,0 +1,17 @@
+{
+  "version": "v01",
+  "frozenAt": "2025-11-11T00:00:00Z",
+  "regions": [
+    "plan_01_north_america.json",
+    "plan_02_latin_america.json",
+    "plan_03_western_europe.json",
+    "plan_04_eastern_europe.json",
+    "plan_05_middle_east.json",
+    "plan_06_africa.json",
+    "plan_07_east_asia.json",
+    "plan_08_south_asia.json",
+    "plan_09_south_east_asia.json",
+    "plan_10_oceania.json"
+  ],
+  "notes": "Dataset frozen for v01 public launch (10 regions, shared categories + 2 regional RSS each)."
+}

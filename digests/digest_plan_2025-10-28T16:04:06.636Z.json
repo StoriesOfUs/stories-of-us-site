@@ -1,0 +1,47 @@
+{
+  "created": "2025-10-28T16:04:06.636Z",
+  "weeklyCounts": {
+    "activism": 13,
+    "arts": 2,
+    "access": 8,
+    "tech": 12,
+    "history": 11,
+    "general": 8,
+    "sandbox_html_only": 9
+  },
+  "chosen": { "category": "activism", "region": "central_asia", "reason": "category rotation & region rotation" },
+  "categorySources": [
+    { "name": "Amnesty International – Latest", "type": "rss", "url": "https://www.amnesty.org/en/latest/feed/", "prefer_lang": "en", "headers": { "Referer": "https://www.amnesty.org/" } },
+    { "name": "Grassroots International – Updates", "type": "html", "url": "https://grassrootsonline.org/news-updates/", "prefer_lang": "en",
+      "selector": { "item": "article, .post, .entry, .card", "title": "h2 a, h3 a, .entry-title a, .card-title a", "link": "h2 a[href], h3 a[href], .entry-title a[href], .card-title a[href]", "date": "time[datetime], .date, .posted-on time" } },
+    { "name": "Fund for Global Human Rights – Latest", "type": "rss", "url": "https://fundhumanrights.org/feed/", "prefer_lang": "en" },
+    { "name": "Global Justice Now – News", "type": "rss", "url": "https://www.globaljustice.org.uk/feed/", "prefer_lang": "en" },
+    { "name": "Equal Times", "type": "rss", "url": "https://www.equaltimes.org/spip.php?page=backend", "prefer_lang": "en" },
+    { "name": "DRA – Disability Rights Advocates", "type": "rss", "url": "https://dralegal.org/feed/", "prefer_lang": "en" },
+    { "name": "PWDA – People With Disability Australia", "type": "rss", "url": "https://pwd.org.au/feed/", "prefer_lang": "en" },
+    { "name": "WID – Blog", "type": "rss", "url": "https://wid.org/feed/", "prefer_lang": "en" },
+
+    {
+      "name": "AAPD – via Google News (lastest)",
+      "type": "rss",
+      "url": "https://news.google.com/rss/search?q=%22American%20Association%20of%20People%20with%20Disabilities%22%20OR%20AAPD&hl=en-GB&gl=GB&ceid=GB:en",
+      "prefer_lang": "en"
+    },
+
+    { "name": "Inclusion International – News", "type": "html",
+      "url": "https://inclusion-international.org/news/", "prefer_lang": "en", "headers": { "Referer": "https://inclusion-international.org/" },
+      "selector": { "item": "article, .news-card, .post, .card", "title": "h2 a, h3 a, .card-title a", "link": "h2 a[href], h3 a[href], .card-title a[href]", "date": "time[datetime], .date, .posted-on time" } },
+
+    { "name": "ENIL – News", "type": "rss", "url": "https://enil.eu/feed/", "prefer_lang": "en" },
+
+    { "name": "World Blind Union – News & Events", "type": "html", "url": "https://wbu.ngo/news/", "prefer_lang": "en",
+      "selector": { "item": "article, .news-item, .card, .post", "title": "h2 a, h3 a, .card__title a, .entry-title a", "link": "h2 a[href], h3 a[href], .card__title a[href], .entry-title a[href]", "date": "time[datetime], .date" } },
+
+    { "name": "IDDC – Blog", "type": "rss", "url": "https://www.iddcconsortium.net/feed/", "prefer_lang": "en" }
+  ],
+  "regionSources": [
+    { "name": "Astana Times (Kazakhstan)", "type": "rss", "url": "https://astanatimes.com/feed/", "prefer_lang": "en", "accept_language": "en,en-GB;q=0.9" },
+    { "name": "KAZINFORM (search: disability)", "type": "html", "url": "https://qazinform.com/search_results?q=disability", "prefer_lang": "en",
+      "selector": { "item": "article, .news-item, .b-article, .search-item, .post, .list li", "title": "h2 a, h3 a, .title a, a", "link": "h2 a[href], h3 a[href], .title a[href], a[href]", "date": "time[datetime], .date" } }
+  ]
+}

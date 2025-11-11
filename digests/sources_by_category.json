@@ -1,0 +1,47 @@
+{
+  "activism": [
+    { "name": "Amnesty International", "type": "rss", "url": "https://www.amnesty.org/en/latest/feed/", "prefer_lang": "en" },
+    { "name": "Grassroots International", "type": "rss", "url": "https://grassrootsonline.org/feed/", "prefer_lang": "en" },
+    { "name": "Fund for Global Human Rights", "type": "rss", "url": "https://fundhumanrights.org/feed/", "prefer_lang": "en" },
+    { "name": "Global Justice Now", "type": "rss", "url": "https://www.globaljustice.org.uk/feed/", "prefer_lang": "en" },
+    { "name": "Equal Times", "type": "rss", "url": "https://www.equaltimes.org/spip.php?page=backend", "prefer_lang": "en" },
+    { "name": "People With Disability Australia", "type": "rss", "url": "https://pwd.org.au/feed/", "prefer_lang": "en" },
+    { "name": "World Institute on Disability", "type": "rss", "url": "https://wid.org/feed/", "prefer_lang": "en" },
+    { "name": "Inclusion International", "type": "rss", "url": "https://inclusion-international.org/feed/", "prefer_lang": "en" },
+    { "name": "ENIL", "type": "rss", "url": "https://enil.eu/feed/", "prefer_lang": "en" },
+    { "name": "World Blind Union", "type": "rss", "url": "https://wbu.ngo/feed/", "prefer_lang": "en" },
+    { "name": "IDDC", "type": "rss", "url": "https://www.iddcconsortium.net/feed/", "prefer_lang": "en" }
+  ],
+  "arts": [
+    { "name": "The Art Newspaper", "type": "html_search", "url": "https://www.theartnewspaper.com/keywords/disabilities" },
+    { "name": "Europe Beyond Access", "type": "rss", "url": "https://www.europebeyondaccess.com/feed/", "prefer_lang": "en" },
+    { "name": "British Council – Arts", "type": "html_search", "url": "https://arts.britishcouncil.org/disability-arts" },
+    { "name": "ArtNet", "type": "html_search", "url": "https://www.artnet.com/search/?q=Disability" },
+    { "name": "Unlimited (UK)", "type": "rss", "url": "https://weareunlimited.org.uk/feed/", "prefer_lang": "en" },
+    { "name": "On The Move", "type": "html_search", "url": "https://on-the-move.org/search?search=Disability" }
+  ],
+  "access": [
+    { "name": "ArchDaily", "type": "rss", "url": "https://www.archdaily.com/rss", "prefer_lang": "en" },
+    { "name": "Dezeen", "type": "rss", "url": "https://www.dezeen.com/feed/", "prefer_lang": "en" },
+    { "name": "Metropolis", "type": "rss", "url": "https://metropolismag.com/feed/", "prefer_lang": "en" },
+    { "name": "Architectural Digest", "type": "rss", "url": "https://www.architecturaldigest.com/feed/", "prefer_lang": "en" }
+  ],
+  "tech": [
+    { "name": "TechRadar", "type": "rss", "url": "https://www.techradar.com/rss", "prefer_lang": "en" },
+    { "name": "Wired", "type": "rss", "url": "https://www.wired.com/feed/rss", "prefer_lang": "en" },
+    { "name": "The Verge", "type": "rss", "url": "https://www.theverge.com/rss/index.xml", "prefer_lang": "en" },
+    { "name": "VentureBeat", "type": "rss", "url": "https://venturebeat.com/feed/", "prefer_lang": "en" }
+  ],
+  "history": [
+    { "name": "History Today", "type": "rss", "url": "https://www.historytoday.com/rss.xml", "prefer_lang": "en" },
+    { "name": "History Workshop", "type": "rss", "url": "https://www.historyworkshop.org.uk/feed/", "prefer_lang": "en" },
+    { "name": "Museums Association", "type": "rss", "url": "https://www.museumsassociation.org/feed/", "prefer_lang": "en" },
+    { "name": "Disability History Association", "type": "rss", "url": "https://dishist.org/feed/", "prefer_lang": "en" }
+  ],
+  "general": [
+    { "name": "International Disability Alliance", "type": "rss", "url": "https://www.internationaldisabilityalliance.org/rss.xml", "prefer_lang": "en" },
+    { "name": "CBM Global", "type": "rss", "url": "https://cbm-global.org/news/feed", "prefer_lang": "en" },
+    { "name": "EDF – European Disability Forum", "type": "rss", "url": "https://www.edf-feph.org/feed/", "prefer_lang": "en" },
+    { "name": "Disability Scoop", "type": "rss", "url": "https://www.disabilityscoop.com/feed/", "prefer_lang": "en" }
+  ]
+}
