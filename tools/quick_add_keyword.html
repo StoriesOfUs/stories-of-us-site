@@ -1,0 +1,135 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>Quick Add Keyword</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <style>
+    :root { --bg:#fafafa; --fg:#111; --muted:#666; --pad:12px; }
+    body{margin:0;padding:24px;font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;background:var(--bg);color:var(--fg)}
+    h1{margin:0 0 16px}
+    label{display:block;margin:16px 0 6px;font-weight:600}
+    select,input,button,textarea{width:560px;max-width:100%;padding:10px;border:1px solid #ccc;border-radius:8px;font:inherit}
+    button{cursor:pointer;background:#1a73e8;color:#fff;border:0}
+    small{color:var(--muted)}
+    .row{display:flex;gap:12px;flex-wrap:wrap}
+    .pill{display:inline-block;margin:6px 8px 0 0;padding:6px 10px;border:1px solid #ddd;border-radius:999px;background:#fff}
+    .pill button{margin-left:8px;background:#f33}
+    pre{background:#fff;border:1px solid #eee;border-radius:8px;padding:12px;white-space:pre-wrap}
+  </style>
+</head>
+<body>
+  <h1>Quick Add Keyword</h1>
+
+  <label>Region</label>
+  <select id="region">
+    <option value="global">global</option>
+    <option>north_america</option>
+    <option>latin_america</option>
+    <option>western_europe</option>
+    <option>eastern_europe</option>
+    <option>middle_east</option>
+    <option>africa</option>
+    <option>east_asia</option>
+    <option>south_asia</option>
+    <option>southeast_asia</option>
+    <option>central_asia</option>
+    <option>oceania</option>
+  </select>
+
+  <label>Keyword or phrase</label>
+  <input id="kw" placeholder="e.g. accessibility OR assistive tech OR sign language"/>
+  <small>Tips: use plain words or OR groups. Matching is case-insensitive and checks title + description.</small>
+
+  <div class="row" style="margin-top:12px">
+    <button id="add">Add keyword</button>
+    <button id="saveAll" style="background:#16a34a">Save file</button>
+    <button id="reload" style="background:#6b7280">Reload file</button>
+  </div>
+
+  <label style="margin-top:22px">Current keywords for region</label>
+  <div id="list"></div>
+
+  <label style="margin-top:22px">File status</label>
+  <pre id="out">—</pre>
+
+<script>
+const FILE_PATH = '../pipeline/config/keywords_by_region.json';
+
+async function loadJSON(path){
+  const r = await fetch(path+'?t='+(Math.random()));
+  if (!r.ok) throw new Error(await r.text());
+  return r.json();
+}
+async function saveJSON(path, data){
+  const r = await fetch('../save_json.php', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ path, data })
+  });
+  if (!r.ok) throw new Error(await r.text());
+  return r.json();
+}
+
+let data = {};
+const regionSel = document.getElementById('region');
+const kwInput   = document.getElementById('kw');
+const list      = document.getElementById('list');
+const out       = document.getElementById('out');
+
+function ensureRegion(arr=true){
+  if (!data[regionSel.value]) data[regionSel.value] = arr?[]:{};
+  return data[regionSel.value];
+}
+function render(){
+  const arr = ensureRegion();
+  list.innerHTML = '';
+  arr.forEach((k,i)=>{
+    const span = document.createElement('span');
+    span.className = 'pill';
+    span.textContent = k;
+    const rm = document.createElement('button');
+    rm.textContent = '×';
+    rm.onclick = ()=>{ arr.splice(i,1); render(); };
+    span.appendChild(rm);
+    list.appendChild(span);
+  });
+  out.textContent = 'Loaded ' + (Object.keys(data).length||0) + ' region sections.';
+}
+
+async function init(){
+  out.textContent = 'Loading…';
+  try {
+    data = await loadJSON(FILE_PATH);
+  } catch(e) {
+    // create a starter structure if file is missing
+    data = { global:[
+      "disability","disabled","accessibility","assistive","wheelchair","sign language","braille","paralympic","inclusive","caption","hearing impaired","screen reader","ramp"
+    ]};
+  }
+  render();
+  out.textContent = 'Ready. File: '+FILE_PATH;
+}
+
+document.getElementById('add').onclick = ()=>{
+  const k = kwInput.value.trim();
+  if (!k) return;
+  const arr = ensureRegion();
+  if (!arr.includes(k)) arr.push(k);
+  kwInput.value = '';
+  render();
+};
+
+document.getElementById('saveAll').onclick = async ()=>{
+  out.textContent = 'Saving…';
+  try { await saveJSON(FILE_PATH, data); out.textContent = 'Saved ✓'; }
+  catch(e){ out.textContent = 'Save error: '+e.message; }
+};
+
+document.getElementById('reload').onclick = init;
+regionSel.onchange = render;
+
+init();
+</script>
+</body>
+</html>
