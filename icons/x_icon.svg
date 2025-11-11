@@ -1,0 +1,9 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" stroke-miterlimit="10" style="fill-rule:nonzero;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;" version="1.1" viewBox="0 0 160 160" xml:space="preserve">
+<ns0:defs />
+<ns0:clipPath id="ArtboardFrame">
+<ns0:rect height="160" width="160" x="0" y="0" />
+</ns0:clipPath>
+<ns0:g clip-path="url(#ArtboardFrame)" id="X">
+<ns0:path d="M64.8664 87.1275C64.8664 87.1275 30.9249 129.288 24.3296 137.214C27.3859 137.214 42.0883 137.214 42.0883 137.214L73.2689 98.1058L101.543 137.214L141.107 137.214C141.107 137.214 132.589 124.06 117.468 103.823C102.347 83.586 94.1923 71.9497 94.1923 71.9497L136.871 20.8508L117.468 20.8508L86.5825 59.5926L58.1103 20.8508L18.8928 20.8508L64.8664 87.1275ZM54.7322 36.0287L117.468 123.554L106.279 123.554C106.279 123.554 43.5735 36.7033 43.2518 36.0287C43.7343 35.8601 54.7322 36.0287 54.7322 36.0287Z" fill="#f2f2f2" fill-rule="nonzero" opacity="1" stroke="none" />
+</ns0:g>
+</ns0:svg>

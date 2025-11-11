@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0"/>
+<meta http-equiv="Pragma" content="no-cache"/>
+<meta http-equiv="Expires" content="0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Open — latest plan (cache-busted)</title>
+<script>
+async function go(){
+  const candidates = [
+    '/website_2025/list_digests.php?cb=' + Date.now(),
+    'list_digests.php?cb=' + Date.now()
+  ];
+  let js=null;
+  for(const u of candidates){
+    try{ const r=await fetch(u); js=await r.json(); if(js) break; }catch(e){}
+  }
+  if(!js){ document.body.textContent='Unable to load plan list.'; return; }
+
+  const items = Array.isArray(js.items) ? js.items
+              : Array.isArray(js.files) ? js.files.map(n=>({name:n}))
+              : [];
+  if(!items.length){ document.body.textContent='Plan list is empty.'; return; }
+  items.sort((a,b)=>(b.mtime||0)-(a.mtime||0));
+  const name = items[0].name;
+
+  const baseCandidates = ['/website_2025/fetch_plan.php?name=', 'fetch_plan.php?name='];
+  for(const base of baseCandidates){
+    const url = base + encodeURIComponent(name) + '&cb=' + Date.now();
+    try{
+      const r = await fetch(url);
+      if(r.ok){ location.href = url; return; }
+    }catch(e){}
+  }
+  document.body.textContent='fetch_plan.php not reachable at either path.';
+}
+window.addEventListener('load', go);
+</script>
+</head>
+<body style="font:16px/1.5 system-ui;padding:24px">Opening latest plan…</body>
+</html>

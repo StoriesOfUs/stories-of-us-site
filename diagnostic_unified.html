@@ -1,0 +1,485 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0"/>
+<meta http-equiv="Pragma" content="no-cache"/>
+<meta http-equiv="Expires" content="0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Unified Diagnostic — Sampler + Health</title>
+<style>
+  :root{
+    --bg:#d8bc5b; --ink:#222; --card:#fff; --radius:14px;
+    --ok:#CDEEE0; --warn:#EEDC82; --err:#F7B0A0;
+    --font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;
+    --wrapW:1160px; --railW:1120px;
+    --space-xxs:6px; --space-xs:10px; --space-sm:14px; --space:20px; --space-lg:28px; --space-xl:36px; --space-2xl:52px;
+    --panel-gap: var(--space-lg);         /* vertical gap under summary chips */
+    --col-gap: calc(var(--space-lg) + 8px);/* space between Sampler and Health columns */
+    --section-gap: var(--space-xl);        /* gap above/below big sections */
+    --tile-gap: var(--space-sm);           /* gap between source tiles */
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font:var(--font)}
+  .wrap{max-width:var(--wrapW);margin:0 auto;padding:var(--space)}
+  .rail{max-width:var(--railW);margin:0 auto}
+  h1{margin:0 0 var(--space-sm);font:700 28px/1.2 system-ui}
+
+  .bar{display:flex;gap:var(--space-sm);flex-wrap:wrap;align-items:center;margin-bottom:var(--space-sm)}
+  .btn{background:#111;color:#fff;border:0;border-radius:12px;padding:10px 14px;cursor:pointer}
+  .btn[disabled]{opacity:.5;cursor:default}
+  select{min-width:360px;padding:10px 12px;border-radius:10px}
+
+  .summary{margin-top:var(--space-sm); margin-bottom:var(--panel-gap);}
+  .pills{display:flex;gap:var(--space-sm);flex-wrap:wrap;align-items:center}
+  .pill{background:#ddd;border-radius:999px;padding:8px 12px;cursor:pointer}
+  .pill.active{background:#111;color:#fff}
+  .meta{color:#555;margin-left:auto}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:var(--col-gap); margin-bottom:var(--section-gap);}
+  @media (max-width:980px){ .grid2{grid-template-columns:1fr; gap:var(--space)} }
+
+  .card{background:var(--card);border-radius:var(--radius);padding:var(--space)}
+  .panel h2{margin:0 0 var(--space-sm);font:700 20px/1.2 system-ui}
+  .muted{color:#555}
+
+  .src{border:1px solid #e5e0d2;border-radius:12px;padding:12px 14px;margin-bottom:var(--tile-gap);background:#fff}
+  .src h3{margin:0 0 8px;font:700 16px}
+  .src h3 a{ overflow-wrap:anywhere; }
+  .chips{display:flex;flex-wrap:wrap;gap:8px; overflow-wrap:anywhere; }
+  .chip{border-radius:999px;background:#eee;padding:8px 10px;font-size:14px}
+  .chip.ok{background:var(--ok)}
+  .chip.warn{background:var(--warn)}
+  .chip.err{background:var(--err)}
+
+  .fail{padding:10px 12px;border-radius:10px;background:#fff3f1;border:1px solid #efc2ba;margin:8px 0}
+  .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .progress{height:10px;background:rgba(0,0,0,.08);border-radius:8px;overflow:hidden;margin:var(--space-sm) 0}
+  .progress > div{height:100%;background:#111;transition:width .2s}
+  pre{white-space:pre-wrap;margin:0}
+  .spinner{display:inline-block;border:3px solid rgba(0,0,0,.15);border-top-color:#111;border-radius:50%;width:14px;height:14px;animation:spin .8s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* extra breathing room above/below each big panel */
+  .section{margin-bottom:var(--section-gap);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Unified Diagnostic — Sampler + Health</h1>
+
+  <div class="bar">
+    <button id="btnLatest" class="btn">Load latest plan</button>
+    <select id="planSelect"><option value="">— Select a plan —</option></select>
+    <button id="btnLoad" class="btn">Load selected</button>
+    <button id="btnReset" class="btn">Reset</button>
+  </div>
+
+  <div class="rail">
+    <div class="card summary" id="infoBox">
+      <div class="pills">
+        <span class="pill active" data-filter="all">All (0)</span>
+        <span class="pill" data-filter="ok">OK (0)</span>
+        <span class="pill" data-filter="warn">Info/Warn (0)</span>
+        <span class="pill" data-filter="err">Errors (0)</span>
+        <span class="meta" id="loadedInfo"></span>
+      </div>
+      <div id="statusLine" class="muted" style="margin-top:8px"></div>
+    </div>
+  </div>
+
+  <div class="rail section">
+    <div class="grid2">
+      <!-- Sampler Panel -->
+      <section class="panel card" aria-label="Sampler">
+        <h2>Sampler (content preview)</h2>
+        <div class="row" style="margin-bottom:12px">
+          <button id="btnFetch" class="btn">Fetch content (selected plan)</button>
+          <span class="muted" id="samplerSummary"></span>
+        </div>
+        <div class="grid2" style="grid-template-columns:1fr 1fr">
+          <div>
+            <div class="muted" style="margin-bottom:8px">Category sources</div>
+            <div id="samplerCat"></div>
+          </div>
+          <div>
+            <div class="muted" style="margin-bottom:8px">Region sources</div>
+            <div id="samplerReg"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Health Panel -->
+      <section class="panel card" aria-label="Health">
+        <h2>Health (status & reasons)</h2>
+        <div class="row" style="margin-bottom:12px">
+          <button id="btnCheckOne" class="btn">Check loaded plan</button>
+          <button id="btnCheckAll" class="btn">Check all plans</button>
+          <button id="btnExport" class="btn">Export JSON</button>
+        </div>
+
+        <div class="card" id="oneReport" style="margin:0 0 var(--space-sm) 0;display:none">
+          <div class="row"><strong id="oneTitle">Report</strong> <span class="muted" id="oneSummary"></span></div>
+          <div id="oneFails"></div>
+        </div>
+
+        <div class="card" id="allReport" style="margin:0;display:none">
+          <div class="row"><strong>All Plans — Summary</strong></div>
+          <div class="progress"><div id="progBar" style="width:0%"></div></div>
+          <div class="muted" id="allSummary"></div>
+          <div id="allList" style="margin-top:8px"></div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <div class="rail section">
+    <details class="card">
+      <summary><strong>Debug JSON</strong></summary>
+      <pre id="dbg"></pre>
+    </details>
+  </div>
+</div>
+
+<script>
+const els = {
+  sel: document.getElementById('planSelect'),
+  btnLatest: document.getElementById('btnLatest'),
+  btnLoad: document.getElementById('btnLoad'),
+  btnReset: document.getElementById('btnReset'),
+  loadedInfo: document.getElementById('loadedInfo'),
+  status: document.getElementById('statusLine'),
+
+  pills: Array.from(document.querySelectorAll('.pill')),
+
+  btnFetch: document.getElementById('btnFetch'),
+  samplerCat: document.getElementById('samplerCat'),
+  samplerReg: document.getElementById('samplerReg'),
+  samplerSummary: document.getElementById('samplerSummary'),
+
+  btnCheckOne: document.getElementById('btnCheckOne'),
+  btnCheckAll: document.getElementById('btnCheckAll'),
+  btnExport: document.getElementById('btnExport'),
+  oneReport: document.getElementById('oneReport'),
+  oneTitle: document.getElementById('oneTitle'),
+  oneSummary: document.getElementById('oneSummary'),
+  oneFails: document.getElementById('oneFails'),
+  allReport: document.getElementById('allReport'),
+  allSummary: document.getElementById('allSummary'),
+  allList: document.getElementById('allList'),
+  progBar: document.getElementById('progBar'),
+
+  dbg: document.getElementById('dbg')
+};
+
+let currentPlanName = '';
+let currentPlan = null;
+let lastSamplerResults = null;
+let allPlans = [];
+let allResults = [];
+let filter = 'all';
+
+function bust(u){ return u + (u.includes('?')?'&':'?') + 't=' + Date.now(); }
+function lockUI(flag){
+  [els.btnFetch, els.btnCheckOne, els.btnCheckAll, els.btnLoad, els.btnLatest].forEach(b=> b.disabled=flag);
+  els.status.innerHTML = flag ? `<span class="spinner"></span> Running…` : '';
+}
+
+/* Load plan list (two paths to be forgiving) */
+async function loadPlanList(){
+  const endpoints = ['/website_2025/list_digests.php','list_digests.php'];
+  let js=null;
+  for (const ep of endpoints){
+    try{ const r=await fetch(bust(ep)); js=await r.json(); break; }catch(_){}
+  }
+  if (!js){ alert('Unable to load plan list'); return; }
+
+  const items = Array.isArray(js.items) ? js.items
+              : Array.isArray(js.files) ? js.files.map(n=>({name:n}))
+              : [];
+  items.sort((a,b)=>(b.mtime||0)-(a.mtime||0));
+  allPlans = items.map(i=>i.name);
+  els.sel.innerHTML = '<option value="">— Select a plan —</option>';
+  items.forEach(i=>{
+    const o=document.createElement('option'); o.value=i.name; o.textContent=i.name; els.sel.appendChild(o);
+  });
+}
+
+/* Load selected plan */
+async function loadSelected(){
+  const name = els.sel.value;
+  if(!name){ alert('Choose a plan'); return; }
+  try{
+    const endpoints = ['/website_2025/fetch_plan.php?name=','fetch_plan.php?name='];
+    let js=null;
+    for (const base of endpoints){
+      try{ const r=await fetch(bust(base + encodeURIComponent(name))); js=await r.json(); break; }catch(_){}
+    }
+    if(!js || !js.plan){ throw new Error(js && js.error ? js.error : 'Invalid plan JSON'); }
+    currentPlan = js.plan; currentPlanName = name;
+    lastSamplerResults = null;
+    els.loadedInfo.textContent = `Loaded: ${name} | Cat: ${currentPlan.categorySources?.length||0}, Reg: ${currentPlan.regionSources?.length||0}`;
+    els.samplerCat.innerHTML = ''; els.samplerReg.innerHTML = '';
+    els.samplerSummary.textContent = '';
+    els.oneReport.style.display = 'none';
+    els.allReport.style.display = 'none';
+    updatePills({all:0,ok:0,warn:0,err:0});
+    els.dbg.textContent = JSON.stringify({loaded:name, plan:currentPlan}, null, 2);
+  }catch(e){
+    alert('Load failed: '+e.message);
+  }
+}
+
+/* Load latest */
+async function loadLatest(){
+  await loadPlanList();
+  if(allPlans.length){ els.sel.value = allPlans[0]; await loadSelected(); }
+  else alert('No plans found.');
+}
+
+/* Filter summary pills */
+function updatePills({all=0,ok=0,warn=0,err=0}){
+  document.querySelector('[data-filter="all"]').textContent  = `All (${all})`;
+  document.querySelector('[data-filter="ok"]').textContent   = `OK (${ok})`;
+  document.querySelector('[data-filter="warn"]').textContent = `Info/Warn (${warn})`;
+  document.querySelector('[data-filter="err"]').textContent  = `Errors (${err})`;
+}
+
+/* Utility for chips */
+function chip(text, cls){ const s=document.createElement('span'); s.className='chip '+cls; s.textContent=text; return s; }
+
+/* Sampler render */
+function renderSampler(){
+  els.samplerCat.innerHTML = ''; els.samplerReg.innerHTML = '';
+  const results = lastSamplerResults?.results || [];
+  const byName = new Map(results.map(r=>[r.name, r]));
+  const catList = currentPlan?.categorySources || [];
+  const regList = currentPlan?.regionSources || [];
+  const total = catList.length + regList.length;
+  els.samplerSummary.textContent = `Using sources — Category: ${catList.length}, Region: ${regList.length}, Total: ${total}`;
+
+  function draw(list, mount){
+    list.forEach(src=>{
+      const r = byName.get(src.name);
+      let show = true;
+      if (filter==='ok')   show = !!(r && r.items && r.items.length);
+      if (filter==='warn') show = !!(r && !r.error && (!r.items || !r.items.length));
+      if (filter==='err')  show = !!(r && r.error);
+      if (!show) return;
+
+      const div = document.createElement('div');
+      div.className = 'src';
+      div.innerHTML = `<h3>${src.name} — <a href="${src.url}" target="_blank" rel="noopener">${src.url}</a></h3><div class="chips"></div>`;
+      const chips = div.querySelector('.chips');
+
+      if (!r) chips.append(chip('Not fetched yet','warn'));
+      else if (r.error) chips.append(chip(r.error,'err'));
+      else if (r.items && r.items.length) r.items.slice(0,3).forEach(it => chips.append(chip(it.title || it.link || '(untitled)','ok')));
+      else chips.append(chip('No items extracted','warn'));
+
+      mount.appendChild(div);
+    });
+  }
+  draw(catList, els.samplerCat);
+  draw(regList, els.samplerReg);
+}
+
+/* Fetch content (Sampler) */
+async function fetchSampler(){
+  if (!currentPlan){ alert('Load a plan first.'); return; }
+  try{
+    lockUI(true);
+    const sources=[...(currentPlan.categorySources||[]),...(currentPlan.regionSources||[])];
+    const payload={sources,itemsPerSource:3};
+    const endpoints = ['/website_2025/articles_fetch.php','articles_fetch.php'];
+    let data=null;
+    for (const ep of endpoints){
+      try{
+        const res=await fetch(ep,{method:'POST',headers:{'Content-Type':'application/json'},body: JSON.stringify(payload)});
+        if(!res.ok) throw new Error(`HTTP ${res.status}`);
+        data=await res.json();
+        break;
+      }catch(_){}
+    }
+    if(!data) throw new Error('Fetch failed at all endpoints');
+    lastSamplerResults=data;
+
+    const all=data.results.length;
+    const ok=data.results.filter(r=>r.items&&r.items.length).length;
+    const warn=data.results.filter(r=>!r.error&&(!r.items||!r.items.length)).length;
+    const err=data.results.filter(r=>r.error).length;
+    updatePills({all,ok,warn,err});
+    renderSampler();
+  }catch(e){
+    alert('Fetch failed: '+e.message);
+  }finally{
+    lockUI(false);
+  }
+}
+
+/* Health helpers */
+function summarizeHealth(rep){
+  const total = rep.results.length;
+  const ok    = rep.results.filter(r=>r.status==='ok').length;
+  const warn  = rep.results.filter(r=>r.status==='warn').length;
+  const err   = rep.results.filter(r=>r.status==='err').length;
+  return {total, ok, warn, err};
+}
+function renderOneReport(name, report){
+  const s = summarizeHealth(report);
+  els.oneTitle.textContent = `Report — ${name}`;
+  els.oneSummary.textContent = `OK: ${s.ok}  •  Warn: ${s.warn}  •  Errors: ${s.err}  •  Total: ${s.total}`;
+  els.oneFails.innerHTML = '';
+  const fails = report.results.filter(r=> r.status!=='ok');
+  if(!fails.length){
+    els.oneFails.innerHTML = '<div class="muted">No issues found.</div>';
+  }else{
+    fails.forEach(r=>{
+      const d=document.createElement('div');
+      d.className='fail';
+      d.innerHTML = `<strong>${r.name}</strong> — <a href="${r.url}" target="_blank" rel="noopener">${r.url}</a><br>
+                     <em>${r.status.toUpperCase()}</em> • HTTP: ${r.http} • ${r.reason||''}`;
+      els.oneFails.appendChild(d);
+    });
+  }
+  els.oneReport.style.display='block';
+  els.allReport.style.display='none';
+  els.dbg.textContent = JSON.stringify(report, null, 2);
+}
+
+/* Check loaded plan */
+async function checkLoaded(){
+  if(!currentPlan){ alert('Load a plan first'); return; }
+  try{
+    lockUI(true);
+    const sources = [...(currentPlan.categorySources||[]), ...(currentPlan.regionSources||[])];
+    const endpoints = ['/website_2025/sources_health.php','sources_health.php'];
+    let data=null;
+    for (const ep of endpoints){
+      try{
+        const res = await fetch(ep,{method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({sources})});
+        if(!res.ok) throw new Error(`HTTP ${res.status}`);
+        data = await res.json();
+        break;
+      }catch(_){}
+    }
+    if(!data || !data.ok) throw new Error((data && data.error) || 'Health check failed');
+    renderOneReport(currentPlanName, data);
+  }catch(e){
+    els.oneReport.style.display='block';
+    els.oneTitle.textContent = `Report — ${currentPlanName || 'N/A'}`;
+    els.oneSummary.textContent = '';
+    els.oneFails.innerHTML = `<div class="fail">Error: ${e.message}</div>`;
+    els.dbg.textContent = e.stack || e.message;
+  }finally{
+    lockUI(false);
+  }
+}
+
+/* Check all plans */
+async function checkAll(){
+  try{
+    lockUI(true);
+    await loadPlanList();
+    if(!allPlans.length){ alert('No plans found'); lockUI(false); return; }
+
+    els.allReport.style.display='block';
+    els.oneReport.style.display='none';
+    els.allSummary.textContent = 'Running…';
+    els.allList.innerHTML='';
+    els.progBar.style.width='0%';
+    const total = allPlans.length;
+    const agg = {ok:0,warn:0,err:0,total:0};
+    allResults = [];
+
+    for(let i=0;i<allPlans.length;i++){
+      const pname = allPlans[i];
+      let row = document.createElement('div'); row.className='card'; row.style.marginBottom='12px'; row.innerHTML=`<div><strong>${pname}</strong></div>`;
+      els.allList.appendChild(row);
+
+      try{
+        let pl=null;
+        for (const base of ['/website_2025/fetch_plan.php?name=','fetch_plan.php?name=']){
+          try{ const r = await fetch(bust(base+encodeURIComponent(pname))); pl = await r.json(); break; }catch(_){}
+        }
+        if(!pl || !pl.plan) throw new Error(pl && pl.error ? pl.error : 'Invalid plan');
+        const sources=[...(pl.plan.categorySources||[]),...(pl.plan.regionSources||[])];
+
+        let rep=null;
+        for (const ep of ['/website_2025/sources_health.php','sources_health.php']){
+          try{ const r = await fetch(ep,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sources})}); rep = await r.json(); break; }catch(_){}
+        }
+        if(!rep || !rep.ok) throw new Error((rep && rep.error)||'Health failed');
+
+        const s=summarizeHealth(rep);
+        agg.ok+=s.ok; agg.warn+=s.warn; agg.err+=s.err; agg.total+=s.total;
+        row.insertAdjacentHTML('beforeend', `<div class="muted">OK: ${s.ok} • Warn: ${s.warn} • Errors: ${s.err} • Total: ${s.total}</div>`);
+        const fails=rep.results.filter(r=>r.status!=='ok');
+        if(fails.length){
+          fails.forEach(r=>{
+            const d=document.createElement('div'); d.className='fail';
+            d.innerHTML=`<strong>${r.name}</strong> — <a href="${r.url}" target="_blank" rel="noopener">${r.url}</a><br><em>${r.status.toUpperCase()}</em> • HTTP: ${r.http} • ${r.reason||''}`;
+            row.appendChild(d);
+          });
+        } else {
+          row.insertAdjacentHTML('beforeend','<div class="muted">No issues found.</div>');
+        }
+        allResults.push({plan:pname,report:rep});
+      }catch(err){
+        row.insertAdjacentHTML('beforeend', `<div class="fail">Error: ${err.message}</div>`);
+        allResults.push({plan:pname, ok:false, error:err.message});
+      }
+      els.progBar.style.width = Math.round(((i+1)/total)*100)+'%';
+    }
+
+    els.allSummary.textContent = `Aggregate issues — OK: ${agg.ok} • Warn: ${agg.warn} • Errors: ${agg.err} • Total: ${agg.total}`;
+  }catch(e){
+    els.allReport.style.display='block';
+    els.allSummary.textContent='Run failed';
+    els.allList.innerHTML = `<div class="fail">Error: ${e.message}</div>`;
+    els.dbg.textContent = e.stack || e.message;
+  }finally{
+    lockUI(false);
+  }
+}
+
+/* Filter wiring */
+els.pills.forEach(p=>{
+  p.addEventListener('click', ()=>{
+    els.pills.forEach(x=>x.classList.remove('active'));
+    p.classList.add('active');
+    filter = p.dataset.filter;
+    renderSampler();
+  });
+});
+
+/* Export */
+els.btnExport.addEventListener('click', ()=>{
+  const blob = new Blob([JSON.stringify({generated:new Date().toISOString(), plan:currentPlanName, sampler:lastSamplerResults, health:allResults}, null, 2)], {type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='diagnostic_report_'+Date.now()+'.json'; a.click();
+});
+
+/* Events */
+els.btnLatest.addEventListener('click', loadLatest);
+els.btnLoad.addEventListener('click', loadSelected);
+els.btnReset.addEventListener('click', ()=> location.replace(location.pathname+'?cb='+Date.now()));
+els.btnFetch.addEventListener('click', fetchSampler);
+els.btnCheckOne.addEventListener('click', checkLoaded);
+els.btnCheckAll.addEventListener('click', checkAll);
+
+/* Query param helpers */
+function qp(){ const u=new URL(location.href); return Object.fromEntries(u.searchParams.entries()); }
+
+/* Bootstrap */
+(async function init(){
+  await loadPlanList();
+  const q=qp();
+  if (q.auto==='latest'){ await loadLatest(); }
+  // fetch/check only when explicitly asked via query params
+  if (q.fetch==='1'){ await fetchSampler(); }
+  if (q.check==='one'){ await checkLoaded(); }
+  if (q.check==='all'){ await checkAll(); }
+})();
+</script>
+</body>
+</html>

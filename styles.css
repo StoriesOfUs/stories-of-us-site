@@ -1,0 +1,209 @@
+/* =========================================================
+   Stories Of Us — header alignment fix + icon/size tweaks
+   ========================================================= */
+
+/* -------- Tokens -------- */
+:root{
+  --brand-w: 1200px;           /* outer max width frame */
+  --side-pad: clamp(14px,3vw,28px);
+
+  --header-bg:#191919;
+  --body-bg:#f2f2f2;
+  --text:#191919;
+  --muted:#666;
+
+  --radius:14px;
+  --gap:18px;
+
+  /* Measured at runtime to the logo's rendered width */
+  --align-w: 860px;            /* fallback value */
+
+  /* Logo height; width will auto from image aspect */
+  --brand-h: clamp(120px, 22vw, 210px);
+}
+
+/* A11y helpers */
+.sr-only{ position:absolute!important; clip:rect(1px,1px,1px,1px); width:1px; height:1px; overflow:hidden; }
+.skip{ position:absolute; left:-9999px; top:-9999px; }
+.skip:focus{ left:1rem; top:1rem; background:#fff; padding:.5rem .75rem; border:2px solid #000; border-radius:8px; z-index:1000; }
+
+/* Base */
+*{ box-sizing:border-box; }
+html,body{ margin:0; padding:0; }
+body{
+  font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  color:#191919;
+  background: var(--body-bg);
+  line-height: 1.5;
+}
+a{ color: inherit; }
+img{ max-width:100%; display:block; }
+
+/* =========================================================
+   Header: outer rows + inner alignment box
+   ========================================================= */
+.banner{ background: var(--header-bg); color:#f2f2f2; }
+
+/* Each row sits in an outer frame (consistent margins/padding) */
+.header__row{
+  width: min(var(--brand-w), 92vw);
+  margin: 0 auto;
+  padding: 0 var(--side-pad);
+}
+
+/* Inner box whose width equals the measured logo width */
+.align{
+  max-width: var(--align-w);
+  margin: 0 auto;
+}
+
+/* ---------- Row 0: TOPBAR ---------- */
+.header__top{ padding-top: 10px; padding-bottom: 6px; }
+.topbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between; /* stretches to exactly the .align width */
+  gap: 16px;
+}
+
+/* Social icons (left) — 38px, no outline */
+.topbar__left{ display:flex; align-items:center; gap: clamp(10px,1.4vw,16px); }
+.iconbtn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  text-decoration:none;
+  line-height:0;
+  padding: 2px;
+  border: none;
+  background: transparent;
+}
+.iconbtn img{
+  width: 38px;
+  height: 38px;
+  object-fit: contain;
+}
+.iconbtn:hover img{ opacity:.85; }
+
+/* Utility chips (right) — match category buttons */
+.topbar__right{ display:flex; align-items:center; gap: clamp(10px,1.4vw,16px); }
+.chip{
+  white-space:nowrap;
+  background:transparent;
+  color:#f2f2f2;
+  border:2px solid #f2f2f2;
+  border-radius:999px;
+  padding: .48rem .90rem;   /* baseline (reduced ~2%) */
+  font-weight:700;
+  font-size: 1rem;          /* baseline (reduced ~2%) */
+  text-decoration:none;
+  display:inline-block;
+}
+.chip:hover{ background:#f2f2f2; color:#111; }
+
+/* ---------- Row 1: LOGO ---------- */
+.header__brand{ padding: 6px 0 8px; }
+.align--brand{ display:flex; align-items:center; justify-content:center; }
+.logo{
+  height: var(--brand-h);
+  width: auto;
+  object-fit: contain;
+}
+
+/* ---------- Row 2: CATEGORY TABS ---------- */
+.banner__tabs{
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap: clamp(8px, 1.2vw, 14px);
+  padding: 8px 0 14px;
+}
+
+/* Category buttons — baseline sizing */
+.tab{
+  white-space:nowrap;
+  background:transparent;
+  color:#f2f2f2;
+  border:2px solid #f2f2f2;
+  border-radius:999px;
+  padding: .48rem .90rem;   /* baseline (reduced ~2%) */
+  font-weight:700;
+  font-size: 1rem;          /* baseline (reduced ~2%) */
+}
+.tab[aria-selected="true"]{ background:#f2f2f2; color:#111; }
+
+/* =========================================================
+   Main grid/cards
+   ========================================================= */
+.notice{
+  width: min(var(--brand-w), 92vw);
+  margin:16px auto 0;
+  background:#fff;
+  border:2px dashed #191919;
+  padding:.75rem 1rem;
+  border-radius:12px;
+}
+.main{ padding: 8px var(--side-pad) 40px; }
+
+.grid{
+  width: min(var(--brand-w), 92vw);
+  margin:0 auto;
+  display:grid;
+  gap: var(--gap);
+  grid-template-columns: repeat(auto-fit, minmax(340px,1fr));
+}
+@media (max-width:760px){ .grid{ grid-template-columns:1fr; } }
+
+.card{
+  background:#fff;
+  border:2px solid #191919;
+  border-radius:14px;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+}
+.card__media{ display:block; aspect-ratio:16/9; background:#e6e6e6; }
+.card__media img{ width:100%; height:100%; object-fit:cover; }
+.card__body{ padding:14px; }
+.card__kicker{ font-weight:800; letter-spacing:.2px; margin-bottom:6px; }
+.card__title{ margin:0 0 8px 0; font-size:1.15rem; line-height:1.3; }
+.card__title a{ text-decoration:none; border-bottom:2px solid transparent; }
+.card__title a:hover{ border-bottom-color:#999; }
+.card__meta{ font-size:.92rem; color:var(--muted); display:flex; gap:6px; flex-wrap:wrap; }
+
+/* Preview drawer */
+.card__preview{
+  display:none;
+  background:#fff;
+  border:2px solid #000;
+  border-radius:12px;
+  padding:12px;
+  margin:10px 8px 6px;
+}
+.card__preview:target{ display:block; }
+
+/* Buttons inside preview */
+.btn{ display:inline-block; background:#000; color:#fff; text-decoration:none; padding:8px 12px; border-radius:10px; }
+.btn--light{ background:#eaeaea; color:#000; }
+
+/* =========================================================
+   Responsive tweaks
+   ========================================================= */
+@media (max-width:900px){
+  :root{ --brand-h: clamp(96px, 26vw, 168px); }
+  .iconbtn img{ width:34px; height:34px; } /* scale down slightly on smaller screens */
+}
+@media (max-width:680px){
+  :root{ --brand-h: clamp(82px, 28vw, 132px); }
+  .iconbtn img{ width:30px; height:30px; }
+}
+
+/* Keep header graphics neutral (no blending) */
+img[src*="storiesofus_logo"],
+.logo{
+  filter: none !important;
+  mix-blend-mode: normal !important;
+  background: transparent !important;
+  -webkit-mask-image: none !important;
+  mask-image: none !important;
+}

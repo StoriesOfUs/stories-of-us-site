@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0"/>
+<meta http-equiv="Pragma" content="no-cache"/>
+<meta http-equiv="Expires" content="0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Open — list_digests.php (cache-busted)</title>
+<script>
+window.addEventListener('load', ()=>{
+  const url1 = '/website_2025/list_digests.php?cb=' + Date.now();
+  const url2 = 'list_digests.php?cb=' + Date.now();
+  // Try site-rooted first, then relative
+  fetch(url1).then(r=>{
+    if(!r.ok) throw 0; location.href = url1;
+  }).catch(()=>{
+    location.href = url2;
+  });
+});
+</script>
+</head>
+<body style="font:16px/1.5 system-ui;padding:24px">Opening list_digests.php…</body>
+</html>
+

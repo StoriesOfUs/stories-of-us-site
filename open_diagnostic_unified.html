@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0"/>
+<meta http-equiv="Pragma" content="no-cache"/>
+<meta http-equiv="Expires" content="0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Open (Hard-Refresh) — Unified Diagnostic</title>
+<style>
+  body{font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;margin:0;background:#f6f6f6;color:#111}
+  .wrap{max-width:720px;margin:6vh auto;padding:24px;background:#fff;border-radius:12px;box-shadow:0 4px 28px rgba(0,0,0,.06)}
+  h1{margin:0 0 12px;font-size:22px}
+  .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  label{font-weight:600}
+  select,input,button{font:inherit;padding:10px 12px;border-radius:8px;border:1px solid #ddd}
+  button{background:#111;color:#fff;border:0;cursor:pointer}
+  .muted{color:#555}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Open — Unified Diagnostic (cache-busted)</h1>
+  <p class="muted">Click “Open” to launch the diagnostic with a hard refresh and optional auto-actions.</p>
+
+  <div class="row" style="margin:10px 0">
+    <label for="auto">Auto:</label>
+    <select id="auto">
+      <option value="">(none)</option>
+      <option value="latest" selected>Load latest plan</option>
+    </select>
+
+    <label for="fetch">Fetch:</label>
+    <select id="fetch">
+      <option value="">No</option>
+      <option value="1" selected>Yes</option>
+    </select>
+
+    <label for="check">Check:</label>
+    <select id="check">
+      <option value="">(none)</option>
+      <option value="one">Loaded plan</option>
+      <option value="all" selected>All plans</option>
+    </select>
+
+    <button id="go">Open</button>
+  </div>
+
+  <p class="muted" id="out"></p>
+</div>
+
+<script>
+document.getElementById('go').addEventListener('click', ()=>{
+  const auto  = document.getElementById('auto').value;
+  const fetch = document.getElementById('fetch').value;
+  const check = document.getElementById('check').value;
+
+  const base = 'diagnostic_unified.html';
+  const params = new URLSearchParams();
+  if (auto)  params.set('auto', auto);
+  if (fetch) params.set('fetch', fetch);
+  if (check) params.set('check', check);
+  params.set('cb', Date.now().toString()); // hard refresh
+
+  const url = base + '?' + params.toString();
+  document.getElementById('out').textContent = 'Opening: ' + url;
+  location.href = url;
+});
+
+// auto-open on load with defaults
+window.addEventListener('load', ()=>{
+  document.getElementById('go').click();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Stories Of Us — worldwide disability content</title>
+  <meta name="theme-color" content="#191919">
+  <link rel="stylesheet" href="styles.css?cb=three-rows-2">
+</head>
+<body class="theme-default">
+  <a class="skip" href="#main">Skip to content</a>
+
+  <!-- =======================================================
+       Header (3 rows: Topbar • Brand • Category tabs)
+       All three rows use an inner .align box whose width
+       equals the measured logo width, so edges line up.
+       ======================================================= -->
+  <header class="banner" role="banner" aria-label="Site header">
+
+    <!-- Row 0: TOPBAR (Socials left, Utility buttons right) -->
+    <div class="header__row header__top" aria-label="Top bar">
+      <div class="align">
+        <nav class="topbar" aria-label="Social links and quick actions">
+          <!-- Left: Social icons (no circle; 25% larger) -->
+          <div class="topbar__left" aria-label="Social media">
+            <a class="iconbtn" href="#" aria-label="Facebook">
+              <img src="assets/icons/facebook_icon.svg" alt="">
+              <span class="sr-only">Facebook</span>
+            </a>
+            <a class="iconbtn" href="#" aria-label="Instagram">
+              <img src="assets/icons/instagram_icon.svg" alt="">
+              <span class="sr-only">Instagram</span>
+            </a>
+            <a class="iconbtn" href="#" aria-label="X (formerly Twitter)">
+              <img src="assets/icons/x_icon.svg" alt="">
+              <span class="sr-only">X (formerly Twitter)</span>
+            </a>
+            <a class="iconbtn" href="#" aria-label="YouTube">
+              <img src="assets/icons/youtube_icon.svg" alt="">
+              <span class="sr-only">YouTube</span>
+            </a>
+          </div>
+
+          <!-- Right: Additional buttons -->
+          <div class="topbar__right" aria-label="Quick actions">
+            <a class="chip" href="#" role="button">About</a>
+            <a class="chip" href="#" role="button">Text Only</a>
+            <a class="chip" href="#" role="button">High Contrast</a>
+          </div>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Row 1: LOGO (alignment reference) -->
+    <div class="header__row header__brand" aria-label="Brand">
+      <div class="align align--brand">
+        <picture>
+          <source srcset="assets/brand/storiesofus_logo.svg" type="image/svg+xml">
+          <img
+            class="logo"
+            src="assets/brand/storiesofus_logo.png"
+            alt="Stories Of Us — worldwide disability content"
+            loading="eager" decoding="async">
+        </picture>
+      </div>
+    </div>
+
+    <!-- Row 2: CATEGORY TABS (bottom row) -->
+    <div class="header__row" aria-label="Sections">
+      <div class="align">
+        <div class="banner__tabs" role="tablist">
+          <button class="tab" data-cat="Latest"  role="tab" aria-selected="true">Latest</button>
+          <!-- Removed the 'All' tab -->
+          <button class="tab" data-cat="Access"  role="tab">Access</button>
+          <button class="tab" data-cat="Tech"    role="tab">Tech</button>
+          <button class="tab" data-cat="Activism" role="tab">Activism</button>
+          <button class="tab" data-cat="History" role="tab">History</button>
+          <button class="tab" data-cat="Arts"    role="tab">Arts</button>
+          <button class="tab" data-cat="General" role="tab">General</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- =======================================================
+       Main
+       ======================================================= -->
+  <main id="main" class="main" aria-live="polite">
+    <div id="notice" class="notice">Loading sample feed…</div>
+    <section id="grid" class="grid" aria-label="Story results"></section>
+  </main>
+
+  <script>
+  const $  = s => document.querySelector(s);
+  const $$ = s => Array.from(document.querySelectorAll(s));
+
+  /* --- Alignment: set --align-w to the rendered logo width --- */
+  function setAlignWidth(){
+    const logo = document.querySelector('.align--brand .logo');
+    if(!logo) return;
+    const apply = () => {
+      const w = Math.round(logo.getBoundingClientRect().width);
+      if (w > 0) document.documentElement.style.setProperty('--align-w', w + 'px');
+    };
+    if (logo.complete) { requestAnimationFrame(apply); }
+    else { logo.addEventListener('load', () => requestAnimationFrame(apply), { once:true }); }
+  }
+  window.addEventListener('resize', setAlignWidth);
+  document.addEventListener('DOMContentLoaded', setAlignWidth);
+
+  /* --- Demo feed rendering (unchanged) --- */
+  function formatDate(s){
+    const d=new Date(s);
+    if(isNaN(d)) return s||'';
+    const day=d.getDate();
+    const mo=d.toLocaleString('en-GB',{month:'short'});
+    const yr=d.getFullYear();
+    const suf=n=>([,'st','nd','rd'][(n%10>3)||(~~(n%100/10)===1)?0:n%10]||'th');
+    return `${day}${suf(day)} ${mo} ${yr}`;
+  }
+  function buildCard(item, idx){
+    const el = document.createElement('article');
+    el.className = 'card';
+    const imgSrc = item.image || 'assets/placeholders/placeholder.svg';
+    const cats = Array.isArray(item.categories) ? item.categories : [];
+    const uid = item.id || `s_${idx}`;
+    const targetId = `s_${uid}`;
+    el.dataset.cat = cats.join('|') || 'Latest';
+    el.innerHTML = `
+      <a class="card__media" href="#${targetId}">
+        <img src="${imgSrc}" alt=""
+             onerror="this.onerror=null;this.src='assets/placeholders/placeholder.svg'">
+      </a>
+      <div class="card__body">
+        <div class="card__kicker">${(cats[0]||'Latest')}</div>
+        <h3 class="card__title">
+          <a class="card__toggle" href="#${targetId}">${item.title||'Untitled'}</a>
+        </h3>
+        <div class="card__meta">
+          <span class="card__source">${item.source||'Source'}</span>
+          <span aria-hidden="true">•</span>
+          <time datetime="${item.date||''}">${formatDate(item.date)}</time>
+        </div>
+      </div>
+      <div class="card__preview" id="${targetId}">
+        ${item.preview ? `<p>${item.preview}</p>` : ''}
+        <p class="card__actions">
+          <a class="btn" target="_blank" rel="noopener" href="${item.link||'#'}">Read full article</a>
+          <a class="btn btn--light" href="#">Close</a>
+        </p>
+      </div>
+    `;
+    return el;
+  }
+  function renderAll(items){
+    const grid = $('#grid'); grid.innerHTML='';
+    items.forEach((i,idx) => grid.appendChild(buildCard(i, idx)));
+  }
+  function renderCategory(cat, items){
+    const grid = $('#grid'); grid.innerHTML='';
+    const filtered = cat==='All' ? items : items.filter(i => (i.categories||[]).includes(cat));
+    filtered.forEach((i,idx) => grid.appendChild(buildCard(i, idx)));
+  }
+  function renderLatest(items){
+    const want = ['Access','Tech','Activism','History','Arts','General'];
+    const pick = [];
+    for(const k of want){
+      const hit = items.find(i => Array.isArray(i.categories) && i.categories.includes(k));
+      if(hit) pick.push(hit);
+    }
+    (pick.length ? pick : items.slice(0,6))
+      .forEach((i,idx)=> $('#grid').appendChild(buildCard(i, idx)));
+  }
+
+  const FEED_CANDIDATES = [
+    'feeds/sample_all.json',
+    './feeds/sample_all.json',
+    '/website_2025/feeds/sample_all.json'
+  ];
+  let ALL_ITEMS = [];
+
+  async function load(){
+    const notice = $('#notice');
+    for (const url of FEED_CANDIDATES){
+      try{
+        const res = await fetch(url, { cache: 'no-store' });
+        if(res.ok){
+          ALL_ITEMS = await res.json();
+          notice.textContent = `Loaded ${ALL_ITEMS.length} items.`;
+          renderLatest(ALL_ITEMS);
+          return;
+        }
+      }catch(e){}
+    }
+    notice.textContent = 'Could not find feeds/sample_all.json in expected locations.';
+  }
+
+  function initTabs(){
+    $$('.tab').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        $$('.tab').forEach(t=>t.setAttribute('aria-selected','false'));
+        btn.setAttribute('aria-selected','true');
+        const cat = btn.dataset.cat;
+        $('#grid').innerHTML = '';
+        if(cat==='Latest') renderLatest(ALL_ITEMS);
+        else if(cat==='All') renderAll(ALL_ITEMS);
+        else renderCategory(cat, ALL_ITEMS);
+        if(location.hash) history.replaceState(null,'', location.pathname + location.search);
+      });
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', ()=>{ initTabs(); load(); });
+  </script>
+</body>
+</html>
