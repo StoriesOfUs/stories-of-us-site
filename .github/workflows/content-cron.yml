@@ -21,10 +21,10 @@ jobs:
           extensions: curl, xml
 
       - name: Generate latest JSON for all plans
-        run: php website_2025/tools/generate_latest_cli.php
+        run: php tools/generate_latest_cli.php
 
       - name: Build daily/weekly/monthly digests
-        run: php website_2025/tools/build_digests_cli.php
+        run: php tools/build_digests_cli.php
 
       - name: Commit changes (if any)
         run: |
