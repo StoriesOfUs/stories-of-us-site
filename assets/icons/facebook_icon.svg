@@ -1,0 +1,15 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" stroke-miterlimit="10" style="fill-rule:nonzero;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;" version="1.1" viewBox="0 0 160 160" xml:space="preserve">
+  <ns0:defs />
+  <ns0:clipPath id="ArtboardFrame">
+    <ns0:rect height="160" width="160" x="0" y="0" />
+  </ns0:clipPath>
+  <ns0:g clip-path="url(#ArtboardFrame)" id="Facebook">
+    <ns0:path
+      d="M72.5877 26.7044C64.9041 34.3934 64.9041 61.4678 64.9041 63.5305C61.6668 63.5305 42.4457 63.5305 42.4457 63.5305L42.4457 85.3834L63.9433 85.4817C63.9433 85.4817 64.7693 126.678 64.9041 136.391C68.8159 136.256 91.572 136.391 91.572 136.391L91.572 85.3834L111.11 85.4817C111.11 85.4817 117.144 67.5774 117.548 63.9352C113.772 63.8003 91.572 63.9352 91.572 63.9352C91.572 63.9352 90.8424 46.1292 94.217 42.487C97.5917 38.8449 117.548 40.0589 117.548 40.0589L117.548 20.2295C117.548 20.2295 80.2713 19.0154 72.5877 26.7044Z"
+      fill="#f2f2f2"
+      fill-rule="nonzero"
+      opacity="1"
+      stroke="none"
+    />
+  </ns0:g>
+</ns0:svg>
