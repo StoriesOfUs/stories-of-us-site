@@ -78,6 +78,7 @@
     const statusEl = document.getElementById('status');
     const cardsEl  = document.getElementById('cards');
 
+    // where we try to load data from
     const CANDIDATES = [
       '/assets/feeds/sample_all.json',
       'assets/feeds/sample_all.json',
@@ -112,11 +113,24 @@
       }));
     }
 
+    // 👉 choose placeholder image based on category
+    function placeholderForCategory(cat){
+      const c = (cat || '').toLowerCase();
+      if (c === 'access')   return 'assets/placeholders/access_placeholder.webp';
+      if (c === 'activism') return 'assets/placeholders/activism_placeholder.webp';
+      if (c === 'arts')     return 'assets/placeholders/arts_placeholder.webp';
+      if (c === 'tech')     return 'assets/placeholders/tech_placeholder.webp';
+      if (c === 'history')  return 'assets/placeholders/history_placeholder.webp';
+      if (c === 'general')  return 'assets/placeholders/general_placeholder.webp';
+      // fallback
+      return 'assets/placeholders/placeholder.svg';
+    }
+
     function cardTemplate(s, index){
-      const img = s.image ? `<img src="${s.image}" alt="">`
-                          : `<img src="assets/placeholders/placeholder.svg" alt="">`;
-      const date = s.published ? new Date(s.published).toLocaleString() : '';
       const cat  = s.category || 'Latest';
+      const imgSrc = s.image ? s.image : placeholderForCategory(cat);
+      const img = `<img src="${imgSrc}" alt="">`;
+      const date = s.published ? new Date(s.published).toLocaleString() : '';
       const summary = s.summary || 'Open the full article to read more on the source site.';
       return `
         <article class="card" data-index="${index}">
@@ -161,7 +175,7 @@
       });
     });
 
-    // Drawer behavior (event delegation)
+    // Drawer behaviour
     cardsEl.addEventListener('click', e => {
       const btn = e.target.closest('button[data-action]');
       const cardEl = e.target.closest('.card');
@@ -183,7 +197,7 @@
         return;
       }
 
-      // Clicking the card (outside buttons) toggles drawer
+      // clicking anywhere on the card toggles the drawer
       cardEl.classList.toggle('expanded');
       e.preventDefault();
     });
@@ -200,7 +214,7 @@
         console.error(err);
       });
 
-    // Simple theme toggles (reuse your previous behavior)
+    // Simple theme toggles
     const html = document.documentElement;
     const contrastBtn = document.getElementById('contrastBtn');
     const textOnlyBtn = document.getElementById('textOnlyBtn');
