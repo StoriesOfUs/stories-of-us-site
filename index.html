@@ -1,216 +1,179 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Stories Of Us — worldwide disability content</title>
-  <meta name="theme-color" content="#191919">
-  <link rel="stylesheet" href="styles.css?cb=three-rows-2">
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* small safety styles so layout looks OK even if your main CSS changes */
+    body{margin:0;background:#111;color:#f2f2f2;font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif}
+    .wrap{max-width:1200px;margin:0 auto;padding:16px}
+    .header{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .social{display:flex;gap:12px}
+    .social img{width:28px;height:28px}
+    .hero{display:flex;align-items:center;justify-content:center;margin:12px 0 16px}
+    .hero img{max-width:100%;height:auto}
+    .actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin:8px 0 12px}
+    .btn{border:2px solid #fff;border-radius:20px;padding:8px 14px;background:transparent;color:#fff;font-weight:700}
+    .tabs{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:14px 0}
+    .tabs button{border:2px solid #fff;border-radius:24px;padding:8px 14px;background:#111;color:#fff;font-weight:800}
+    .tabs button.active{background:#fff;color:#000}
+    .status{max-width:1200px;margin:16px auto;border:2px dotted #999;border-radius:12px;color:#000;background:#f4f4f4;padding:12px}
+    .cards{max-width:1200px;margin:16px auto;display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));padding:0 16px 32px}
+    .card{background:#fff;color:#111;border:2px solid #000;border-radius:16px;overflow:hidden}
+    .card .media{height:160px;background:#ddd}
+    .card .media img{width:100%;height:100%;object-fit:cover;display:block}
+    .card .content{padding:12px}
+    .meta{color:#666;font-size:.9rem;margin-top:6px}
+    a{color:inherit;text-decoration:none}
+  </style>
 </head>
-<body class="theme-default">
-  <a class="skip" href="#main">Skip to content</a>
-
-  <!-- =======================================================
-       Header (3 rows: Topbar • Brand • Category tabs)
-       All three rows use an inner .align box whose width
-       equals the measured logo width, so edges line up.
-       ======================================================= -->
-  <header class="banner" role="banner" aria-label="Site header">
-
-    <!-- Row 0: TOPBAR (Socials left, Utility buttons right) -->
-    <div class="header__row header__top" aria-label="Top bar">
-      <div class="align">
-        <nav class="topbar" aria-label="Social links and quick actions">
-          <!-- Left: Social icons (no circle; 25% larger) -->
-          <div class="topbar__left" aria-label="Social media">
-            <a class="iconbtn" href="#" aria-label="Facebook">
-              <img src="assets/icons/facebook_icon.svg" alt="">
-              <span class="sr-only">Facebook</span>
-            </a>
-            <a class="iconbtn" href="#" aria-label="Instagram">
-              <img src="assets/icons/instagram_icon.svg" alt="">
-              <span class="sr-only">Instagram</span>
-            </a>
-            <a class="iconbtn" href="#" aria-label="X (formerly Twitter)">
-              <img src="assets/icons/x_icon.svg" alt="">
-              <span class="sr-only">X (formerly Twitter)</span>
-            </a>
-            <a class="iconbtn" href="#" aria-label="YouTube">
-              <img src="assets/icons/youtube_icon.svg" alt="">
-              <span class="sr-only">YouTube</span>
-            </a>
-          </div>
-
-          <!-- Right: Additional buttons -->
-          <div class="topbar__right" aria-label="Quick actions">
-            <a class="chip" href="#" role="button">About</a>
-            <a class="chip" href="#" role="button">Text Only</a>
-            <a class="chip" href="#" role="button">High Contrast</a>
-          </div>
-        </nav>
+<body>
+  <div class="wrap">
+    <!-- top bar -->
+    <div class="header">
+      <div class="social">
+        <a aria-label="Facebook"  href="#" target="_blank" rel="noopener"><img src="assets/icons/facebook_icon.svg" alt=""></a>
+        <a aria-label="Instagram" href="#" target="_blank" rel="noopener"><img src="assets/icons/instagram_icon.svg" alt=""></a>
+        <a aria-label="X (Twitter)" href="#" target="_blank" rel="noopener"><img src="assets/icons/x_icon.svg" alt=""></a>
+        <a aria-label="YouTube"   href="#" target="_blank" rel="noopener"><img src="assets/icons/youtube_icon.svg" alt=""></a>
+      </div>
+      <div class="actions">
+        <button class="btn" id="aboutBtn">About</button>
+        <button class="btn" id="textOnlyBtn" aria-pressed="false">Text Only</button>
+        <button class="btn" id="contrastBtn" aria-pressed="false">High Contrast</button>
       </div>
     </div>
 
-    <!-- Row 1: LOGO (alignment reference) -->
-    <div class="header__row header__brand" aria-label="Brand">
-      <div class="align align--brand">
-        <picture>
-          <source srcset="assets/brand/storiesofus_logo.svg" type="image/svg+xml">
-          <img
-            class="logo"
-            src="assets/brand/storiesofus_logo.png"
-            alt="Stories Of Us — worldwide disability content"
-            loading="eager" decoding="async">
-        </picture>
-      </div>
+    <!-- hero -->
+    <div class="hero">
+      <img src="assets/brand/storiesofus_logo.svg" alt="Stories Of Us — worldwide disability content">
     </div>
 
-    <!-- Row 2: CATEGORY TABS (bottom row) -->
-    <div class="header__row" aria-label="Sections">
-      <div class="align">
-        <div class="banner__tabs" role="tablist">
-          <button class="tab" data-cat="Latest"  role="tab" aria-selected="true">Latest</button>
-          <!-- Removed the 'All' tab -->
-          <button class="tab" data-cat="Access"  role="tab">Access</button>
-          <button class="tab" data-cat="Tech"    role="tab">Tech</button>
-          <button class="tab" data-cat="Activism" role="tab">Activism</button>
-          <button class="tab" data-cat="History" role="tab">History</button>
-          <button class="tab" data-cat="Arts"    role="tab">Arts</button>
-          <button class="tab" data-cat="General" role="tab">General</button>
-        </div>
-      </div>
+    <!-- tabs -->
+    <div class="tabs" role="tablist" aria-label="Content categories">
+      <button class="active" data-tab="latest" role="tab" aria-selected="true">Latest</button>
+      <button data-tab="Access" role="tab" aria-selected="false">Access</button>
+      <button data-tab="Tech" role="tab" aria-selected="false">Tech</button>
+      <button data-tab="Activism" role="tab" aria-selected="false">Activism</button>
+      <button data-tab="History" role="tab" aria-selected="false">History</button>
+      <button data-tab="Arts" role="tab" aria-selected="false">Arts</button>
+      <button data-tab="General" role="tab" aria-selected="false">General</button>
     </div>
-  </header>
+  </div>
 
-  <!-- =======================================================
-       Main
-       ======================================================= -->
-  <main id="main" class="main" aria-live="polite">
-    <div id="notice" class="notice">Loading sample feed…</div>
-    <section id="grid" class="grid" aria-label="Story results"></section>
-  </main>
+  <div class="status" id="status">Loading…</div>
+  <div class="cards" id="cards"></div>
 
   <script>
-  const $  = s => document.querySelector(s);
-  const $$ = s => Array.from(document.querySelectorAll(s));
+  (function(){
+    const statusEl = document.getElementById('status');
+    const cardsEl  = document.getElementById('cards');
 
-  /* --- Alignment: set --align-w to the rendered logo width --- */
-  function setAlignWidth(){
-    const logo = document.querySelector('.align--brand .logo');
-    if(!logo) return;
-    const apply = () => {
-      const w = Math.round(logo.getBoundingClientRect().width);
-      if (w > 0) document.documentElement.style.setProperty('--align-w', w + 'px');
-    };
-    if (logo.complete) { requestAnimationFrame(apply); }
-    else { logo.addEventListener('load', () => requestAnimationFrame(apply), { once:true }); }
-  }
-  window.addEventListener('resize', setAlignWidth);
-  document.addEventListener('DOMContentLoaded', setAlignWidth);
+    // Try a few safe paths. First one should work with your repo layout.
+    const CANDIDATES = [
+      '/assets/feeds/sample_all.json',
+      'assets/feeds/sample_all.json',
+      '/feeds/sample_all.json',
+      'feeds/sample_all.json'
+    ];
 
-  /* --- Demo feed rendering (unchanged) --- */
-  function formatDate(s){
-    const d=new Date(s);
-    if(isNaN(d)) return s||'';
-    const day=d.getDate();
-    const mo=d.toLocaleString('en-GB',{month:'short'});
-    const yr=d.getFullYear();
-    const suf=n=>([,'st','nd','rd'][(n%10>3)||(~~(n%100/10)===1)?0:n%10]||'th');
-    return `${day}${suf(day)} ${mo} ${yr}`;
-  }
-  function buildCard(item, idx){
-    const el = document.createElement('article');
-    el.className = 'card';
-    const imgSrc = item.image || 'assets/placeholders/placeholder.svg';
-    const cats = Array.isArray(item.categories) ? item.categories : [];
-    const uid = item.id || `s_${idx}`;
-    const targetId = `s_${uid}`;
-    el.dataset.cat = cats.join('|') || 'Latest';
-    el.innerHTML = `
-      <a class="card__media" href="#${targetId}">
-        <img src="${imgSrc}" alt=""
-             onerror="this.onerror=null;this.src='assets/placeholders/placeholder.svg'">
-      </a>
-      <div class="card__body">
-        <div class="card__kicker">${(cats[0]||'Latest')}</div>
-        <h3 class="card__title">
-          <a class="card__toggle" href="#${targetId}">${item.title||'Untitled'}</a>
-        </h3>
-        <div class="card__meta">
-          <span class="card__source">${item.source||'Source'}</span>
-          <span aria-hidden="true">•</span>
-          <time datetime="${item.date||''}">${formatDate(item.date)}</time>
-        </div>
-      </div>
-      <div class="card__preview" id="${targetId}">
-        ${item.preview ? `<p>${item.preview}</p>` : ''}
-        <p class="card__actions">
-          <a class="btn" target="_blank" rel="noopener" href="${item.link||'#'}">Read full article</a>
-          <a class="btn btn--light" href="#">Close</a>
-        </p>
-      </div>
-    `;
-    return el;
-  }
-  function renderAll(items){
-    const grid = $('#grid'); grid.innerHTML='';
-    items.forEach((i,idx) => grid.appendChild(buildCard(i, idx)));
-  }
-  function renderCategory(cat, items){
-    const grid = $('#grid'); grid.innerHTML='';
-    const filtered = cat==='All' ? items : items.filter(i => (i.categories||[]).includes(cat));
-    filtered.forEach((i,idx) => grid.appendChild(buildCard(i, idx)));
-  }
-  function renderLatest(items){
-    const want = ['Access','Tech','Activism','History','Arts','General'];
-    const pick = [];
-    for(const k of want){
-      const hit = items.find(i => Array.isArray(i.categories) && i.categories.includes(k));
-      if(hit) pick.push(hit);
+    async function loadJSON(){
+      for (const url of CANDIDATES){
+        try {
+          const r = await fetch(url, {cache: 'no-store'});
+          if (r.ok) {
+            statusEl.textContent = 'Loaded data from: ' + url;
+            return await r.json();
+          }
+        } catch(e){}
+      }
+      throw new Error('Could not find feeds/sample_all.json in expected locations.');
     }
-    (pick.length ? pick : items.slice(0,6))
-      .forEach((i,idx)=> $('#grid').appendChild(buildCard(i, idx)));
-  }
 
-  const FEED_CANDIDATES = [
-    'feeds/sample_all.json',
-    './feeds/sample_all.json',
-    '/website_2025/feeds/sample_all.json'
-  ];
-  let ALL_ITEMS = [];
+    function normalizeStories(data){
+      // Accept both {stories:[...]} and a bare array
+      const arr = Array.isArray(data) ? data : (data.stories || []);
+      return arr.map(s => ({
+        title: s.title || s.headline || '(untitled)',
+        url:   s.url || s.link || '#',
+        image: s.image || s.thumbnail || '',
+        published: s.published || s.date || '',
+        source: s.source || '',
+        category: s.category || '' // may be empty
+      }));
+    }
 
-  async function load(){
-    const notice = $('#notice');
-    for (const url of FEED_CANDIDATES){
-      try{
-        const res = await fetch(url, { cache: 'no-store' });
-        if(res.ok){
-          ALL_ITEMS = await res.json();
-          notice.textContent = `Loaded ${ALL_ITEMS.length} items.`;
-          renderLatest(ALL_ITEMS);
-          return;
+    function cardTemplate(s){
+      const img = s.image ? `<img src="${s.image}" alt="">`
+                          : `<img src="assets/placeholders/placeholder.svg" alt="">`;
+      const date = s.published ? new Date(s.published).toLocaleString() : '';
+      return `
+        <article class="card">
+          <a href="${s.url}" target="_blank" rel="noopener">
+            <div class="media">${img}</div>
+            <div class="content">
+              <div class="meta">${s.category || 'Latest'}</div>
+              <h3>${s.title}</h3>
+              <p class="meta">${s.source || ''}${date ? ' • ' + date : ''}</p>
+            </div>
+          </a>
+        </article>
+      `;
+    }
+
+    function render(list){ cardsEl.innerHTML = list.map(cardTemplate).join(''); }
+
+    // Tab handling
+    const tabs = Array.from(document.querySelectorAll('.tabs [role="tab"]'));
+    let ALL = [];
+
+    tabs.forEach(btn => {
+      btn.addEventListener('click', () => {
+        tabs.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const key = btn.dataset.tab;
+        if (key === 'latest'){
+          render(ALL);
+        } else {
+          // If items have no category, still show them under Latest only.
+          const subset = ALL.filter(s => (s.category || '').toLowerCase() === key.toLowerCase());
+          render(subset.length ? subset : []);
         }
-      }catch(e){}
-    }
-    notice.textContent = 'Could not find feeds/sample_all.json in expected locations.';
-  }
-
-  function initTabs(){
-    $$('.tab').forEach(btn=>{
-      btn.addEventListener('click',()=>{
-        $$('.tab').forEach(t=>t.setAttribute('aria-selected','false'));
-        btn.setAttribute('aria-selected','true');
-        const cat = btn.dataset.cat;
-        $('#grid').innerHTML = '';
-        if(cat==='Latest') renderLatest(ALL_ITEMS);
-        else if(cat==='All') renderAll(ALL_ITEMS);
-        else renderCategory(cat, ALL_ITEMS);
-        if(location.hash) history.replaceState(null,'', location.pathname + location.search);
       });
     });
-  }
 
-  document.addEventListener('DOMContentLoaded', ()=>{ initTabs(); load(); });
+    // load + render
+    loadJSON()
+      .then(json => {
+        const stories = normalizeStories(json);
+        // newest first
+        stories.sort((a,b)=> (new Date(b.published||0)) - (new Date(a.published||0)));
+        ALL = stories;
+        render(ALL);
+      })
+      .catch(err => {
+        statusEl.textContent = err.message;
+        console.error(err);
+      });
+
+    // accessibility toggles (simple persistence)
+    const html = document.documentElement;
+    const contrastBtn = document.getElementById('contrastBtn');
+    const textOnlyBtn = document.getElementById('textOnlyBtn');
+    function applyState(){
+      const hc = localStorage.getItem('theme-contrast') === '1';
+      const to = localStorage.getItem('mode-textonly') === '1';
+      html.classList.toggle('theme-contrast', hc);
+      html.classList.toggle('mode-textonly', to);
+      contrastBtn.setAttribute('aria-pressed', String(hc));
+      textOnlyBtn.setAttribute('aria-pressed', String(to));
+    }
+    contrastBtn.addEventListener('click', ()=>{ localStorage.setItem('theme-contrast', html.classList.toggle('theme-contrast') ? '1':'0'); applyState();});
+    textOnlyBtn.addEventListener('click', ()=>{ localStorage.setItem('mode-textonly', html.classList.toggle('mode-textonly') ? '1':'0'); applyState();});
+    applyState();
+  })();
   </script>
 </body>
 </html>
