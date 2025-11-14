@@ -6,32 +6,41 @@
   <title>Stories Of Us — worldwide disability content</title>
   <link rel="stylesheet" href="styles.css" />
   <style>
-    /* small safety styles so layout looks OK even if your main CSS changes */
     body{margin:0;background:#111;color:#f2f2f2;font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif}
+    a{color:inherit;text-decoration:none}
     .wrap{max-width:1200px;margin:0 auto;padding:16px}
-    .header{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .header{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
     .social{display:flex;gap:12px}
     .social img{width:28px;height:28px}
-    .hero{display:flex;align-items:center;justify-content:center;margin:12px 0 16px}
-    .hero img{max-width:100%;height:auto}
-    .actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin:8px 0 12px}
+    .actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:flex-end}
     .btn{border:2px solid #fff;border-radius:20px;padding:8px 14px;background:transparent;color:#fff;font-weight:700}
+    .hero{display:flex;align-items:center;justify-content:center;margin:12px 0 16px}
+    .hero img{max-width:360px;width:100%;height:auto}
     .tabs{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:14px 0}
     .tabs button{border:2px solid #fff;border-radius:24px;padding:8px 14px;background:#111;color:#fff;font-weight:800}
     .tabs button.active{background:#fff;color:#000}
-    .status{max-width:1200px;margin:16px auto;border:2px dotted #999;border-radius:12px;color:#000;background:#f4f4f4;padding:12px}
+    .status{max-width:1200px;margin:16px auto;border:2px dotted #999;border-radius:12px;color:#000;background:#f4f4f4;padding:8px 12px}
     .cards{max-width:1200px;margin:16px auto;display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));padding:0 16px 32px}
-    .card{background:#fff;color:#111;border:2px solid #000;border-radius:16px;overflow:hidden}
-    .card .media{height:160px;background:#ddd}
+    .card{background:#fff;color:#111;border:2px solid #000;border-radius:16px;overflow:hidden;display:flex;flex-direction:column;min-height:260px}
+    .card .media{height:140px;background:#ddd}
     .card .media img{width:100%;height:100%;object-fit:cover;display:block}
-    .card .content{padding:12px}
-    .meta{color:#666;font-size:.9rem;margin-top:6px}
-    a{color:inherit;text-decoration:none}
+    .card .content{padding:12px 12px 8px}
+    .cat-label{font-size:.85rem;text-transform:uppercase;letter-spacing:.04em;color:#555;margin-bottom:4px}
+    .card h3{margin:0 0 6px;font-size:1rem}
+    .meta{color:#666;font-size:.85rem;margin:4px 0}
+    .drawer{border-top:1px solid #ccc;padding:10px 12px 12px;margin-top:4px;background:#fafafa;display:none}
+    .card.expanded .drawer{display:block}
+    .drawer p{margin:0 0 10px}
+    .drawer .buttons{display:flex;gap:8px;flex-wrap:wrap}
+    .drawer button{border-radius:18px;border:1px solid #333;padding:6px 10px;font-size:.9rem;cursor:pointer}
+    .drawer button.primary{background:#111;color:#fff}
+    @media (min-width:900px){
+      .tabs{flex-wrap:nowrap}
+    }
   </style>
 </head>
 <body>
   <div class="wrap">
-    <!-- top bar -->
     <div class="header">
       <div class="social">
         <a aria-label="Facebook"  href="#" target="_blank" rel="noopener"><img src="assets/icons/facebook_icon.svg" alt=""></a>
@@ -46,12 +55,10 @@
       </div>
     </div>
 
-    <!-- hero -->
     <div class="hero">
       <img src="assets/brand/storiesofus_logo.svg" alt="Stories Of Us — worldwide disability content">
     </div>
 
-    <!-- tabs -->
     <div class="tabs" role="tablist" aria-label="Content categories">
       <button class="active" data-tab="latest" role="tab" aria-selected="true">Latest</button>
       <button data-tab="Access" role="tab" aria-selected="false">Access</button>
@@ -71,7 +78,6 @@
     const statusEl = document.getElementById('status');
     const cardsEl  = document.getElementById('cards');
 
-    // Try a few safe paths. First one should work with your repo layout.
     const CANDIDATES = [
       '/assets/feeds/sample_all.json',
       'assets/feeds/sample_all.json',
@@ -93,7 +99,6 @@
     }
 
     function normalizeStories(data){
-      // Accept both {stories:[...]} and a bare array
       const arr = Array.isArray(data) ? data : (data.stories || []);
       return arr.map(s => ({
         title: s.title || s.headline || '(untitled)',
@@ -101,34 +106,47 @@
         image: s.image || s.thumbnail || '',
         published: s.published || s.date || '',
         source: s.source || '',
-        category: s.category || '' // may be empty
+        region: s.region || '',
+        category: s.category || '',
+        summary: s.summary || ''
       }));
     }
 
-    function cardTemplate(s){
+    function cardTemplate(s, index){
       const img = s.image ? `<img src="${s.image}" alt="">`
                           : `<img src="assets/placeholders/placeholder.svg" alt="">`;
       const date = s.published ? new Date(s.published).toLocaleString() : '';
+      const cat  = s.category || 'Latest';
+      const summary = s.summary || 'Open the full article to read more on the source site.';
       return `
-        <article class="card">
-          <a href="${s.url}" target="_blank" rel="noopener">
+        <article class="card" data-index="${index}">
+          <a href="${s.url}" target="_blank" rel="noopener" class="card-link">
             <div class="media">${img}</div>
             <div class="content">
-              <div class="meta">${s.category || 'Latest'}</div>
+              <div class="cat-label">${cat}</div>
               <h3>${s.title}</h3>
               <p class="meta">${s.source || ''}${date ? ' • ' + date : ''}</p>
             </div>
           </a>
+          <div class="drawer">
+            <p>${summary}</p>
+            <div class="buttons">
+              <button class="primary" type="button" data-action="open-external">Read full article</button>
+              <button type="button" data-action="close">Close</button>
+            </div>
+          </div>
         </article>
       `;
     }
 
-    function render(list){ cardsEl.innerHTML = list.map(cardTemplate).join(''); }
-
-    // Tab handling
-    const tabs = Array.from(document.querySelectorAll('.tabs [role="tab"]'));
     let ALL = [];
 
+    function render(list){
+      cardsEl.innerHTML = list.map(cardTemplate).join('');
+    }
+
+    // Tabs
+    const tabs = Array.from(document.querySelectorAll('.tabs [role="tab"]'));
     tabs.forEach(btn => {
       btn.addEventListener('click', () => {
         tabs.forEach(b => b.classList.remove('active'));
@@ -137,18 +155,42 @@
         if (key === 'latest'){
           render(ALL);
         } else {
-          // If items have no category, still show them under Latest only.
           const subset = ALL.filter(s => (s.category || '').toLowerCase() === key.toLowerCase());
           render(subset.length ? subset : []);
         }
       });
     });
 
-    // load + render
+    // Drawer behavior (event delegation)
+    cardsEl.addEventListener('click', e => {
+      const btn = e.target.closest('button[data-action]');
+      const cardEl = e.target.closest('.card');
+      if (!cardEl) return;
+
+      const idx = parseInt(cardEl.getAttribute('data-index'), 10);
+      const story = ALL[idx];
+
+      if (btn){
+        const action = btn.getAttribute('data-action');
+        if (action === 'open-external' && story && story.url){
+          window.open(story.url, '_blank', 'noopener');
+        }
+        if (action === 'close'){
+          cardEl.classList.remove('expanded');
+        }
+        e.preventDefault();
+        e.stopPropagation();
+        return;
+      }
+
+      // Clicking the card (outside buttons) toggles drawer
+      cardEl.classList.toggle('expanded');
+      e.preventDefault();
+    });
+
     loadJSON()
       .then(json => {
         const stories = normalizeStories(json);
-        // newest first
         stories.sort((a,b)=> (new Date(b.published||0)) - (new Date(a.published||0)));
         ALL = stories;
         render(ALL);
@@ -158,7 +200,7 @@
         console.error(err);
       });
 
-    // accessibility toggles (simple persistence)
+    // Simple theme toggles (reuse your previous behavior)
     const html = document.documentElement;
     const contrastBtn = document.getElementById('contrastBtn');
     const textOnlyBtn = document.getElementById('textOnlyBtn');
