@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>Stories Of Us — Hard Refresh</title>
+  <style>
+    body{font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+         max-width:600px;margin:40px auto;padding:16px}
+    button{padding:10px 14px;border-radius:8px;border:1px solid #333;cursor:pointer}
+  </style>
+</head>
+<body>
+  <h1>Stories Of Us — Hard Refresh</h1>
+  <p>Click the button below to open the site with a fresh version (cache cleared).</p>
+  <button id="go">Open site fresh</button>
+
+  <script>
+    function openFresh(){
+      // This builds a URL like: https://comfy-sorbet-0c2fdc.netlify.app/?cb=123456789
+      var base = window.location.origin.replace(/\/+$/,'') + "/";
+      var url  = base + "?cb=" + Date.now();
+      window.location.href = url;
+    }
+    document.getElementById('go').addEventListener('click', openFresh);
+    // auto-run once in case you just want to bookmark the page
+    openFresh();
+  </script>
+</body>
+</html>
